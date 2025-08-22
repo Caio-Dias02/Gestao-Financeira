@@ -21,6 +21,8 @@ model User {
   password  String
   categories Category[]
   transactions Transaction[]
+  accounts Account[]
+  userGroups UserGroup[]
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt
 }
@@ -48,7 +50,56 @@ model Transaction {
   userId      String
   category    Category?   @relation(fields: [categoryId], references: [id], onDelete: SetNull)
   categoryId  String?
+  account     Account?   @relation(fields: [accountId], references: [id], onDelete: SetNull)
+  accountId   String?
   createdAt   DateTime    @default(now())
+}
+
+model Account {
+  id        String   @id @default(uuid())
+  name      String   // Ex: "Conta Corrente", "Poupança", "Carteira"
+  type      AccountType // Enum: CHECKING, SAVINGS, CREDIT, CASH, INVESTMENT
+  balance   Decimal  @db.Decimal(10, 2) @default(0) // Saldo atual
+  color     String   // Cor para identificação visual
+  icon      String   // Ícone para identificação visual
+  transactions Transaction[]
+  
+  // Relacionamentos
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Group {
+  id          String      @id @default(uuid())
+  name        String      // Ex: "Família Silva", "Casa 123"
+  description String?
+  userGroups  UserGroup[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+model UserGroup {
+  id        String    @id @default(uuid())
+  userId    String
+  groupId   String
+  role      GroupRole // ADMIN, MEMBER
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  group     Group     @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  createdAt DateTime  @default(now())
+
+  @@unique([userId, groupId])
+}
+
+enum AccountType {
+  CHECKING    // Conta Corrente
+  SAVINGS     // Poupança
+  CREDIT      // Cartão de Crédito
+  CASH        // Dinheiro em espécie
+  INVESTMENT  // Investimentos
 }
 
 enum CategoryType {
@@ -59,4 +110,9 @@ enum CategoryType {
 enum TransactionType {
   INCOME
   EXPENSE
+}
+
+enum GroupRole {
+  ADMIN
+  MEMBER
 }
