@@ -12,10 +12,11 @@
 - [x] Accounts: CRUD protegido criado (module/controller/service) com DTOs e validação; Prisma `Account` com `type`, `balance`, `color`, `icon` migrado.
 - [x] Transactions: CRUD protegido criado (module/controller/service) com DTOs e validação; Inclui filtros por categoria, conta e período; Prisma `Transaction` com relacionamentos para `Category` e `Account`.
 - [x] Groups: CRUD protegido criado (module/controller/service) com DTOs e validação; Inclui gerenciamento de usuários (ADMIN/MEMBER); Prisma `Group` e `UserGroup` com migration aplicada.
+- [x] **Dashboard: módulo completo implementado** com 7 endpoints para agregações financeiras, filtros por período, breakdown por categorias, saldos de contas, histórico temporal e tendências mensais.
 
 **O que falta**
 
-- [ ] Módulos: `goals`, `dashboard`
+- [ ] Módulos: `goals`
 - [ ] Redis integrado para cache de dashboards
 - [ ] DTOs com validações avançadas (class-validator)
 - [ ] CORS/config de deploy

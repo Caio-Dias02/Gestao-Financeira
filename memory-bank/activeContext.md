@@ -16,8 +16,9 @@
 - Proteger rotas com `AuthGuard('jwt')` e expor endpoint `/user/me` (retorna `req.user`)
   - Implementado login com cookie HttpOnly (`access_token`) + fallback Bearer; CORS `credentials: true` e `cookie-parser` habilitados.
   - Corrigido login para salvar a STRING do token no cookie (não o objeto).
+- ✅ **Dashboard: módulo completo implementado** com 7 endpoints para agregações financeiras
 - Definir/estender schema do Prisma para `goals`
-- Implementar módulos: `goals`, `dashboard`
+- Implementar módulo: `goals`
 - Introduzir Redis (cache de dashboards e filtros comuns)
 - Adicionar validações ricas nos DTOs (class-validator)
 
@@ -25,7 +26,7 @@
 
 1) Categories: adicionar `ParseUuidIdPipe` nas rotas `/:id` e documentar endpoints
 2) Goals: CRUD + cálculo de progresso (vínculo a conta/categoria)
-3) Dashboard: endpoints agregados + cache Redis
+3) Dashboard: integrar Redis para cache de dashboards
 4) Testes e2e + documentação de API
 
 
