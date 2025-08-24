@@ -29,6 +29,10 @@ export class AccountsController {
   @Patch(':id')
   @UsePipes(ParseUuidIdPipe)
   update(@Param('id') id: string, @Body() updateAccountDto: UpdateAccountDto, @Req() req: any) {
+    console.log('🔍 [DEBUG] AccountsController.update - ID recebido:', id);
+    console.log('🔍 [DEBUG] AccountsController.update - User:', req.user);
+    console.log('🔍 [DEBUG] AccountsController.update - Dados:', updateAccountDto);
+    
     return this.accountsService.update(id, updateAccountDto, req.user.id);
   }
 

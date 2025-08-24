@@ -1,8 +1,9 @@
-import { Controller, Post, Res } from '@nestjs/common';
+import { Controller, Post, Res, Get, UseGuards, Request } from '@nestjs/common';
 import { Body } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { Response } from 'express';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('auth')
 export class AuthController {
@@ -37,6 +38,20 @@ export class AuthController {
 
 		console.log('🔍 [DEBUG] AuthController.login - Cookie definido, retornando resposta');
 		return {message: 'Login successful', token: { access_token }};
+	}
+
+	@Get('validate')
+	@UseGuards(AuthGuard('jwt'))
+	async validateToken(@Request() req) {
+		// Se chegou aqui, o token é válido (AuthGuard('jwt') validou)
+		return {
+			valid: true,
+			user: {
+				id: req.user.id,
+				email: req.user.email,
+				name: req.user.name
+			}
+		};
 	}
 
 	@Post('logout')

@@ -1,4 +1,5 @@
-import { IsString, IsEnum, IsOptional } from 'class-validator';
+import { IsString, IsEnum, IsOptional, IsNumber, Min } from 'class-validator';
+import { Transform } from 'class-transformer';
 
 export enum AccountType {
   CHECKING = 'CHECKING',
@@ -14,6 +15,11 @@ export class CreateAccountDto {
 
   @IsEnum(AccountType)
   type: AccountType;
+
+  @IsNumber()
+  @Min(0)
+  @Transform(({ value }) => Number(value))
+  balance: number;
 
   @IsString()
   @IsOptional()

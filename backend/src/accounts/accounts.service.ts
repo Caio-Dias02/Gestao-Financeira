@@ -9,6 +9,8 @@ export class AccountsService {
 
   create(createAccountDto: CreateAccountDto, userId: string) {
     const { color, icon, ...rest } = createAccountDto;
+    console.log('🔍 [DEBUG] AccountsService.create - Dados recebidos:', createAccountDto);
+    
     return this.prisma.account.create({
       data: {
         ...rest,
@@ -32,6 +34,10 @@ export class AccountsService {
   }
 
   update(id: string, updateAccountDto: UpdateAccountDto, userId: string) {
+    console.log('🔍 [DEBUG] AccountsService.update - ID:', id);
+    console.log('🔍 [DEBUG] AccountsService.update - UserID:', userId);
+    console.log('🔍 [DEBUG] AccountsService.update - Dados:', updateAccountDto);
+    
     return this.prisma.account.updateMany({
       where: { id, userId },
       data: updateAccountDto,
