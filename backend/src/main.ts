@@ -15,10 +15,10 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe({
     whitelist: true, // Remove propriedades não definidas no DTO  
-    forbidNonWhitelisted: true, // Retorna um erro se alguma propriedade não for definida no DTO
-    transform: false, // Converte os dados recebidos para o tipo definido no DTO
+    forbidNonWhitelisted: false, // Permite propriedades extras (mais flexível)
+    transform: true, // Converte os dados recebidos para o tipo definido no DTO
   }));
 
-  await app.listen(process.env.PORT ?? 3000);
+  await app.listen(process.env.PORT ?? 3001);
 }
 bootstrap();

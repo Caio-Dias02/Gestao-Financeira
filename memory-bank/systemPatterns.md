@@ -1,59 +1,94 @@
-### System Patterns — Arquitetura e decisões
+# System Patterns — Padrões arquiteturais e decisões técnicas
 
-**Arquitetura em camadas**
+## Backend Architecture
 
-- Front-end: React + TypeScript com TanStack Router (rotas), TanStack Query (dados), React Hook Form + Zod (forms/validações), biblioteca de gráficos (ex.: Recharts)
-- Back-end: NestJS (modular), Prisma (ORM), PostgreSQL (dados), Redis (cache de dashboards/sessões)
-- Autenticação/Autorização: JWT (roles admin/user), escopos por grupo familiar
+### NestJS Module Structure
+- **Feature-based modules**: Cada domínio de negócio tem seu próprio módulo
+- **Shared services**: `PrismaService` compartilhado via `PrismaModule`
+- **Guards**: `AuthGuard('jwt')` para proteção de rotas
+- **DTOs**: Validação com `class-validator` e `class-transformer`
+- **Pipes**: `ParseUuidIdPipe` para validação de IDs
 
-```mermaid
-flowchart TD
-  FE[Front-end React] -->|HTTP/JSON| API[NestJS]
-  API -->|Prisma| DB[(PostgreSQL)]
-  API -->|Cache| REDIS[(Redis)]
-```
+### Database Patterns
+- **Prisma ORM**: Type-safe database access
+- **Migrations**: Versionamento de schema via Prisma
+- **Relationships**: Relacionamentos bem definidos entre entidades
+- **Soft deletes**: Implementados onde necessário
 
-**Domínio (entidades principais)**
+### Authentication & Authorization
+- **JWT Strategy**: Cookie-based + Bearer token fallback
+- **User context**: `req.user` disponível em rotas protegidas
+- **Group permissions**: ADMIN/MEMBER roles para grupos
 
-- User: credenciais e perfil
-- Group: agrupador familiar, relaciona usuários
-- Account: contas (banco, carteira, digital) com saldo
-- Category: tipifica transações (INCOME/EXPENSE, cor/ícone)
-- Transaction: lançamentos (valor, data, descrição, tipo, vínculo a conta/categoria/usuário)
-- Goal: metas financeiras (valor, prazo, progresso; vínculo opcional a conta/categoria)
+## Frontend Architecture
 
-**Módulos do back-end (previstos)**
+### Feature-Based Architecture (Domain-Driven Design Frontend)
+- **Organização por domínio**: Cada feature tem sua própria pasta com todos os recursos
+- **Estrutura de features**:
+  ```
+  src/features/
+  ├── auth/           # Autenticação
+  │   ├── components/ # Componentes React
+  │   ├── hooks/      # Custom hooks
+  │   ├── services/   # API calls
+  │   ├── types/      # TypeScript interfaces
+  │   └── index.ts    # Exports públicos
+  ├── dashboard/      # Dashboard financeiro
+  ├── categories/     # Gerenciamento de categorias
+  ├── accounts/       # Gerenciamento de contas
+  ├── transactions/   # Gerenciamento de transações
+  └── groups/         # Gerenciamento de grupos
+  ```
 
-- auth: login, registro, JWT, roles
-- users: dados do usuário
-- groups: grupos familiares e associação de usuários
-- transactions: receitas/despesas + filtros
-- accounts: contas e transferências
-- categories: CRUD de categorias
-- goals: metas (criação, progresso)
-- dashboard: agregações (com cache Redis)
-- notifications (futuro)
+### State Management
+- **TanStack Query**: Gerenciamento de estado do servidor
+- **React Hook Form**: Gerenciamento de formulários
+- **Zod**: Validação de schemas
+- **Context API**: Estado global quando necessário
 
-**Padrões**
+### UI Component System
+- **Shadcn/ui**: Componentes base reutilizáveis
+- **Tailwind CSS**: Sistema de design utility-first
+- **Custom components**: Componentes específicos do domínio
+- **Responsive design**: Mobile-first approach
 
-- Respostas de API padronizadas: `{ message: string, ...payload }`
-- Pipes/DTOs para validação (class-validator) e limpeza (whitelist)
-- Guards para proteção com `AuthGuard('jwt')`
-- Cache de leituras caras (dashboard) via Redis com invalidação em mutações relevantes
+### Data Flow
+- **API Layer**: Services para comunicação com backend
+- **Type Safety**: TypeScript interfaces sincronizadas com backend
+- **Error Handling**: Tratamento consistente de erros
+- **Loading States**: Estados de carregamento para UX
 
+## Integration Patterns
 
-### Autenticação — Estratégia híbrida (Cookie HttpOnly + Bearer)
+### API Communication
+- **RESTful endpoints**: Padrão REST para APIs
+- **Error responses**: Formato consistente de erros
+- **Authentication**: JWT tokens via cookies/headers
+- **CORS**: Configurado para credenciais
 
-- Login (`POST /auth/login`) gera JWT e grava em cookie `access_token` (HttpOnly, `sameSite=lax`, `secure` em produção). O body ainda retorna `{ token: { access_token } }` para compatibilidade.
-- `cookie-parser` habilitado em `main.ts` e CORS com `credentials: true` para permitir envio automático de cookies pelo navegador.
-- `JwtStrategy` lê o token primeiro do cookie e, como fallback, do header `Authorization: Bearer <token>`.
-- Logout (`POST /auth/logout`) limpa o cookie.
-- Correção importante: o cookie deve receber a STRING do JWT (`access_token`), não o objeto `{ access_token: '...' }`.
+### Type Synchronization
+- **Shared types**: Interfaces compartilhadas entre frontend/backend
+- **DTO validation**: Validação consistente em ambas as camadas
+- **API contracts**: Contratos bem definidos para comunicação
 
-### Categorias — Padrões de implementação
+## Development Patterns
 
-- CRUD protegido por `AuthGuard('jwt')` e escopo por `userId` em todas as consultas.
-- Validação via DTOs (`CreateCategoryDto`, `UpdateCategoryDto`), incluindo enum de tipo e regex para cor hex.
-- Prisma `Category` inclui `color` e `icon` para persistir personalização visual de forma consistente no back-end.
+### Code Organization
+- **Separation of concerns**: Lógica de negócio separada da UI
+- **Composition over inheritance**: Reutilização via composição
+- **Custom hooks**: Lógica reutilizável encapsulada em hooks
+- **Service layer**: Abstração da comunicação com APIs
+
+### Testing Strategy
+- **Unit tests**: Testes de componentes e hooks
+- **Integration tests**: Testes de fluxos completos
+- **E2E tests**: Testes de cenários de usuário
+- **Mock services**: Mocks para APIs externas
+
+### Performance Patterns
+- **Code splitting**: Lazy loading de features
+- **Memoization**: React.memo e useMemo para otimizações
+- **Query caching**: TanStack Query para cache inteligente
+- **Bundle optimization**: Tree shaking e minificação
 
 

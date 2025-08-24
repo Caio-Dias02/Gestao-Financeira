@@ -9,6 +9,25 @@ export class UserService {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(createUserDto: CreateUserDto) {  
+    // Validação dos dados recebidos
+    if (!createUserDto.password) {
+      throw new Error('Password is required');
+    }
+    
+    if (!createUserDto.name) {
+      throw new Error('Name is required');
+    }
+    
+    if (!createUserDto.email) {
+      throw new Error('Email is required');
+    }
+    
+    console.log('Creating user with data:', {
+      name: createUserDto.name,
+      email: createUserDto.email,
+      passwordLength: createUserDto.password?.length
+    });
+    
     const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
     const user = await this.prisma.user.create({
       data: {
