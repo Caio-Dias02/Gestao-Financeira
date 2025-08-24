@@ -1,10 +1,13 @@
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
+import { Injectable } from '@nestjs/common';
+import { UserService } from '../user/user.service';
 
 const fromCookie = (req: any) => req?.cookies?.access_token || null;
 
+@Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-	constructor() {
+	constructor(private readonly userService: UserService) {
 		super({
 			jwtFromRequest: ExtractJwt.fromExtractors([fromCookie, ExtractJwt.fromAuthHeaderAsBearerToken()]),
 			ignoreExpiration: false,
@@ -13,6 +16,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 	}
 
 	async validate(payload: any) {
-		return { id: payload.sub, email: payload.email };
+		// Busca dados completos do usuário
+		const user = await this.userService.findOne(payload.sub);
+		return user.user; // Retorna os dados do usuário sem a mensagem
 	}
 }

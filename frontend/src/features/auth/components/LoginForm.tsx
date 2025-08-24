@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 
 // Schema de validação com Zod
@@ -18,6 +19,7 @@ interface LoginFormProps {
 
 export const LoginForm: React.FC<LoginFormProps> = ({ onSuccess }) => {
   const { login, isLoginLoading } = useAuth();
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   
   const {
@@ -40,6 +42,11 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSuccess }) => {
       console.log('🔍 [DEBUG] LoginForm - Chamando login...');
       await login(data);
       console.log('🔍 [DEBUG] LoginForm - Login bem-sucedido!');
+      
+      // Redireciona para o dashboard após login bem-sucedido
+      console.log('🔍 [DEBUG] LoginForm - Redirecionando para dashboard...');
+      navigate('/dashboard');
+      
       onSuccess?.();
     } catch (error) {
       console.error('🔍 [DEBUG] LoginForm - Erro no login:', error);
@@ -49,6 +56,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSuccess }) => {
       });
     }
   };
+
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);

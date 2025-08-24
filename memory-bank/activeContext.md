@@ -12,61 +12,95 @@
 - Groups: módulo criado com CRUD protegido (controller/service/module), DTOs com validação e escopo por `userId`. Inclui gerenciamento de usuários (ADMIN/MEMBER) e relacionamentos. Prisma `Group` e `UserGroup` com migration aplicada.
 - ✅ **Dashboard: módulo completo implementado** com 7 endpoints para agregações financeiras
 - ✅ **PrismaModule criado** para resolver dependências entre módulos
-- ✅ **Frontend: estrutura inicial criada** com Feature-Based Architecture
+- ✅ **Frontend: sistema de rotas moderno implementado** com Feature-Based Architecture
 
 **Foco atual**
 
-- **Desenvolvimento do Frontend** com Feature-Based Architecture
-- Estrutura de features organizada por domínio (auth, dashboard, categories, accounts, transactions, groups)
-- Configuração de Tailwind CSS com paleta de cores customizada
-- Sistema de autenticação implementado (types, services, hooks, components)
-- Providers e roteamento configurados
+- **Sistema de Rotas Moderno** implementado e funcionando
+- **Lazy Loading** configurado para todas as páginas
+- **AuthGuard** protegendo rotas autenticadas
+- **Error Boundary** para captura de erros
+- **Navegação inteligente** com indicador de página ativa
+
+**Sistema de Rotas Implementado**
+
+```
+frontend/src/
+├── app-routes.tsx                    # Sistema de rotas principal
+├── components/_shared/
+│   ├── app-layout.tsx               # Layout principal com navegação
+│   ├── navigation.tsx               # Menu de navegação
+│   └── error-boundary.tsx           # Captura de erros
+├── features/
+│   ├── auth/
+│   │   ├── components/
+│   │   │   └── auth-guard.tsx      # Proteção de rotas
+│   │   └── pages/
+│   │       └── login-page.tsx      # Página de login
+│   ├── dashboard/
+│   │   └── pages/
+│   │       └── dashboard-page.tsx   # Dashboard principal
+│   ├── categories/
+│   │   └── pages/
+│   │       └── categories-page.tsx  # Gerenciar categorias
+│   ├── accounts/
+│   │   └── pages/
+│   │       └── accounts-page.tsx    # Gerenciar contas
+│   └── transactions/
+│       └── pages/
+│           └── transactions-page.tsx # Gerenciar transações
+└── pages/
+    └── not-found-page.tsx           # Página 404
+```
+
+**Rotas Configuradas**
+
+- **`/login`** → Página de login (pública)
+- **`/`** → Redireciona para `/dashboard`
+- **`/dashboard`** → Dashboard principal (protegida)
+- **`/categorias`** → Gerenciar categorias (protegida)
+- **`/contas`** → Gerenciar contas (protegida)
+- **`/transacoes`** → Gerenciar transações (protegida)
+- **`/*`** → Página 404
+
+**Características Implementadas**
+
+1. **Lazy Loading** - Páginas carregam sob demanda
+2. **Suspense** - Loading states elegantes
+3. **AuthGuard** - Proteção automática de rotas
+4. **AppLayout** - Layout consistente para páginas protegidas
+5. **Navegação Inteligente** - Menu com indicador de página ativa
+6. **Error Boundary** - Captura de erros e prevenção de crashes
+7. **Estrutura Escalável** - Fácil adicionar novas features
 
 **Próximos passos (ordem sugerida)**
 
-**FASE 1: Frontend - Módulos Core (1-2 semanas)**
-1. **Dashboard Module** - Implementar componentes de visualização de dados financeiros
-   - Cards de resumo (saldo total, receitas, despesas)
-   - Gráficos de tendências mensais
-   - Breakdown por categorias
-   - Lista de transações recentes
+**FASE 1: Testar e Validar Sistema Atual (1-2 dias)**
+1. **Testar Navegação** - Verificar se login funciona e navegação entre páginas
+2. **Validar Integração Backend** - Testar endpoint `/auth/login` e token JWT
 
-2. **Categories Module** - CRUD completo de categorias
-   - Lista de categorias com cores e ícones
-   - Formulário de criação/edição
-   - Modal de confirmação para exclusão
+**FASE 2: Implementar Funcionalidades Core (1-2 semanas)**
+3. **Dashboard Funcional** - Conectar com endpoints do backend, implementar cards com dados reais
+4. **Módulo de Categorias** - CRUD completo com formulários e lista
+5. **Módulo de Contas** - CRUD completo de contas bancárias
+6. **Módulo de Transações** - CRUD completo com filtros avançados
 
-3. **Accounts Module** - CRUD completo de contas
-   - Lista de contas com saldos
-   - Formulário de criação/edição
-   - Visualização de histórico de transações
-
-4. **Transactions Module** - CRUD completo de transações
-   - Lista com filtros avançados
-   - Formulário de criação/edição
-   - Importação em lote (futuro)
-
-**FASE 2: Frontend - Funcionalidades Avançadas (1 semana)**
-5. **Groups Module** - Gerenciamento de grupos familiares
-6. **Layout e Navegação** - Sistema de navegação principal
-7. **Componentes UI** - Biblioteca de componentes reutilizáveis
-
-**FASE 3: Backend - Funcionalidades Adicionais (1 semana)**
-8. **Goals Module** - CRUD de metas financeiras
-9. **Redis Integration** - Cache para dashboards
-10. **Validações Avançadas** - class-validator nos DTOs
+**FASE 3: Funcionalidades Avançadas (1 semana)**
+7. **Módulo de Grupos** - Gerenciamento de grupos familiares
+8. **Responsividade e UX** - Mobile-first design e animações
 
 **FASE 4: Integração e Testes (1 semana)**
-11. **Integração Frontend-Backend** - Sincronização de tipos e validações
-12. **Testes** - Unitários e de integração
-13. **Documentação** - API e componentes
+9. **Sincronização Frontend-Backend** - Sincronização de tipos e validações
+10. **Testes** - Unitários e de integração
+11. **Documentação** - API e componentes
 
 **Tecnologias Frontend em uso:**
 - React 18 + TypeScript
+- React Router DOM v6 para roteamento
 - TanStack Query (React Query) para gerenciamento de estado
 - React Hook Form + Zod para formulários e validação
 - Tailwind CSS para estilização
-- Recharts para gráficos
-- Shadcn/ui para componentes base
+- Lazy Loading + Suspense para performance
+- Error Boundary para captura de erros
 
 

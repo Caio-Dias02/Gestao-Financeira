@@ -20,18 +20,31 @@ export const useAuth = () => {
   // Mutation para login
   const loginMutation = useMutation({
     mutationFn: (credentials: LoginCredentials) => AuthApi.login(credentials),
-    onSuccess: (data) => {
-      // Atualiza o cache com o usuário logado
-      queryClient.setQueryData(['user'], data.user);
+    onSuccess: async (data) => {
+      console.log('🔍 [DEBUG] useAuth - Login bem-sucedido, atualizando cache...');
+      
+      // Após login bem-sucedido, busca o usuário atual
+      try {
+        const user = await AuthApi.getCurrentUser();
+        queryClient.setQueryData(['user'], user);
+        console.log('🔍 [DEBUG] useAuth - Usuário atual buscado e cache atualizado');
+      } catch (error) {
+        console.error('🔍 [DEBUG] useAuth - Erro ao buscar usuário atual:', error);
+      }
     },
   });
 
   // Mutation para registro
   const registerMutation = useMutation({
     mutationFn: (data: RegisterData) => AuthApi.register(data),
-    onSuccess: (data) => {
-      // Atualiza o cache com o usuário registrado
-      queryClient.setQueryData(['user'], data.user);
+    onSuccess: async (data) => {
+      // Após registro bem-sucedido, busca o usuário atual
+      try {
+        const user = await AuthApi.getCurrentUser();
+        queryClient.setQueryData(['user'], user);
+      } catch (error) {
+        console.error('🔍 [DEBUG] useAuth - Erro ao buscar usuário atual após registro:', error);
+      }
     },
   });
 

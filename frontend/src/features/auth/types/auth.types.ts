@@ -18,8 +18,10 @@ export interface RegisterData {
 }
 
 export interface AuthResponse {
-  user: User;
-  access_token: string;
+  message: string;
+  token: {
+    access_token: string;
+  };
 }
 
 export interface AuthState {

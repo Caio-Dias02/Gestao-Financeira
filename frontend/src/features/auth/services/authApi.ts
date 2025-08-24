@@ -38,8 +38,8 @@ export class AuthApi {
     console.log('🔍 [DEBUG] AuthApi.login - Resposta recebida:', response);
     
     // Salva o token JWT se a resposta contiver um
-    if (response.access_token) {
-      localStorage.setItem('auth_token', response.access_token);
+    if (response.token && response.token.access_token) {
+      localStorage.setItem('auth_token', response.token.access_token);
       console.log('🔍 [DEBUG] AuthApi.login - Token salvo no localStorage');
     } else {
       console.warn('🔍 [DEBUG] AuthApi.login - Nenhum token recebido');
