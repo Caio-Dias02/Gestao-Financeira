@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException, ConflictException, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
@@ -8,43 +8,33 @@ import { UpdateUserDto } from './dto/update-user.dto';
 export class UserService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(createUserDto: CreateUserDto) {  
-    // Validação dos dados recebidos
-    if (!createUserDto.password) {
-      throw new Error('Password is required');
+  async create(createUserDto: CreateUserDto) {
+    try {
+      const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
+      const user = await this.prisma.user.create({
+        data: {
+          name: createUserDto.name,
+          email: createUserDto.email,
+          password: hashedPassword,
+        },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        },
+      });
+      return {
+        message: 'User created successfully',
+        user,
+      };
+    } catch (error) {
+      // Erro de email duplicado (Prisma error P2002)
+      if (error.code === 'P2002' && error.meta?.target?.includes('email')) {
+        throw new ConflictException('Este email já está em uso');
+      }
+      // Outros erros não esperados
+      throw new BadRequestException('Erro ao criar usuário');
     }
-    
-    if (!createUserDto.name) {
-      throw new Error('Name is required');
-    }
-    
-    if (!createUserDto.email) {
-      throw new Error('Email is required');
-    }
-    
-    console.log('Creating user with data:', {
-      name: createUserDto.name,
-      email: createUserDto.email,
-      passwordLength: createUserDto.password?.length
-    });
-    
-    const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
-    const user = await this.prisma.user.create({
-      data: {
-        name: createUserDto.name,
-        email: createUserDto.email,
-        password: hashedPassword,
-      },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-      },
-    });
-    return {
-      message: 'User created successfully',
-      user,
-    };
   }
 
   async findAll() {
@@ -68,6 +58,11 @@ export class UserService {
         email: true,
       },
     });
+    
+    if (!user) {
+      throw new NotFoundException('Usuário não encontrado');
+    }
+    
     return {
       message: 'User fetched successfully',
       user,
@@ -91,42 +86,64 @@ export class UserService {
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {
-    const updateData: any = {};
-    
-    if (updateUserDto.name) {
-      updateData.name = updateUserDto.name;
+    try {
+      const updateData: any = {};
+      
+      if (updateUserDto.name) {
+        updateData.name = updateUserDto.name;
+      }
+      
+      if (updateUserDto.email) {
+        updateData.email = updateUserDto.email;
+      }
+      
+      if (updateUserDto.password) {
+        updateData.password = await bcrypt.hash(updateUserDto.password, 10);
+      }
+      
+      const user = await this.prisma.user.update({
+        where: { id },
+        data: updateData,
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        },
+      });
+      
+      return {
+        message: 'User updated successfully',
+        user,
+      };
+    } catch (error) {
+      // Usuário não encontrado (Prisma error P2025)
+      if (error.code === 'P2025') {
+        throw new NotFoundException('Usuário não encontrado');
+      }
+      // Email duplicado (Prisma error P2002)
+      if (error.code === 'P2002' && error.meta?.target?.includes('email')) {
+        throw new ConflictException('Este email já está em uso');
+      }
+      // Outros erros
+      throw new BadRequestException('Erro ao atualizar usuário');
     }
-    
-    if (updateUserDto.email) {
-      updateData.email = updateUserDto.email;
-    }
-    
-    if (updateUserDto.password) {
-      updateData.password = await bcrypt.hash(updateUserDto.password, 10);
-    }
-    
-    const user = await this.prisma.user.update({
-      where: { id },
-      data: updateData,
-      select: {
-        id: true,
-        name: true,
-        email: true,
-      },
-    });
-    
-    return {
-      message: 'User updated successfully',
-      user,
-    };
   }
 
   async remove(id: string) {
-    await this.prisma.user.delete({
-      where: { id },
-    });
-    return {
-      message: 'User deleted successfully',
-    };
+    try {
+      await this.prisma.user.delete({
+        where: { id },
+      });
+      return {
+        message: 'User deleted successfully',
+      };
+    } catch (error) {
+      // Usuário não encontrado (Prisma error P2025)
+      if (error.code === 'P2025') {
+        throw new NotFoundException('Usuário não encontrado');
+      }
+      // Outros erros (ex: constraint violations)
+      throw new BadRequestException('Erro ao deletar usuário');
+    }
   }
 }

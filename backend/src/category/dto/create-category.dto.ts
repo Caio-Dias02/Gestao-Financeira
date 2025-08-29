@@ -6,22 +6,23 @@ export enum CategoryType {
 }
 
 export class CreateCategoryDto {
-  @IsString()
-  @IsNotEmpty()
-  @Length(1, 50)
+  @IsString({ message: 'Nome deve ser um texto' })
+  @IsNotEmpty({ message: 'Nome é obrigatório' })
+  @Length(1, 50, { message: 'Nome deve ter entre 1 e 50 caracteres' })
   name!: string;
 
-  @IsEnum(CategoryType)
+  @IsEnum(CategoryType, { message: 'Tipo deve ser INCOME ou EXPENSE' })
   type!: CategoryType;
 
-  // Hex color #RGB or #RRGGBB
-  @IsString()
-  @Matches(/^#(?:[0-9a-fA-F]{3}){1,2}$/)
+  @IsString({ message: 'Cor deve ser um texto' })
+  @Matches(/^#(?:[0-9a-fA-F]{3}){1,2}$/, { 
+    message: 'Cor deve ser um código hexadecimal válido (ex: #FF0000 ou #F00)' 
+  })
   color!: string;
 
-  @IsString()
-  @IsNotEmpty()
-  @Length(1, 50)
+  @IsString({ message: 'Ícone deve ser um texto' })
+  @IsNotEmpty({ message: 'Ícone é obrigatório' })
+  @Length(1, 50, { message: 'Ícone deve ter entre 1 e 50 caracteres' })
   icon!: string;
 }
 
