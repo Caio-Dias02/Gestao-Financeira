@@ -10,13 +10,15 @@ import { AccountsModule } from './accounts/accounts.module';
 import { TransactionModule } from './transaction/transaction.module';
 import { GroupsModule } from './groups/groups.module';
 import { DashboardModule } from './dashboard/dashboard.module';
+import { ReportsModule } from './reports/reports.module';
+import { SettingsModule } from './settings/settings.module';
 import { GlobalErrorInterceptor } from './commom/interceptors/global-error.interceptor';
 import { LoggingInterceptor } from './commom/interceptors/logging.interceptor';
 import { HttpExceptionFilter } from './commom/filters/http-exception.filter';
 import { CustomLoggerService } from './commom/logger/custom-logger.service';
 
 @Module({
-  imports: [UserModule, AuthModule, CategoryModule, AccountsModule, TransactionModule, GroupsModule, DashboardModule],
+  imports: [UserModule, AuthModule, CategoryModule, AccountsModule, TransactionModule, GroupsModule, DashboardModule, ReportsModule, SettingsModule],
   controllers: [AppController],
   providers: [
     AppService, 

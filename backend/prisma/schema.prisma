@@ -23,6 +23,8 @@ model User {
   transactions Transaction[]
   accounts Account[]
   userGroups UserGroup[]
+  reports Report[]
+  settings Setting[]
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt
 }
@@ -110,6 +112,38 @@ enum CategoryType {
 enum TransactionType {
   INCOME
   EXPENSE
+}
+
+model Report {
+  id          String      @id @default(uuid())
+  name        String
+  description String?
+  type        ReportType
+  filters     Json?       // Filtros aplicados (JSON object)
+  data        Json?       // Dados do relatório cacheados (opcional)
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+model Setting {
+  id        String      @id @default(uuid())
+  key       String      // Chave única da configuração (ex: theme, language, currency)
+  value     String      // Valor da configuração
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  @@unique([userId, key])
+}
+
+enum ReportType {
+  INCOME_EXPENSE      // Relatório de receitas e despesas
+  CATEGORY_ANALYSIS   // Análise por categorias
+  MONTHLY_SUMMARY     // Resumo mensal
+  ACCOUNT_BALANCE     // Saldo de contas
 }
 
 enum GroupRole {
