@@ -4,6 +4,7 @@ import { CreateAccountDto } from './dto/create-account.dto';
 import { UpdateAccountDto } from './dto/update-account.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { ParseUuidIdPipe } from '../commom/pipes/parse-uuid-id.pipe';
+import { AuthenticatedRequest } from '../auth/types/auth.types';
 
 @Controller('accounts')
 @UseGuards(AuthGuard('jwt'))
@@ -11,24 +12,24 @@ export class AccountsController {
   constructor(private readonly accountsService: AccountsService) {}
 
   @Post()
-  create(@Body() createAccountDto: CreateAccountDto, @Req() req: any) {
+  create(@Body() createAccountDto: CreateAccountDto, @Req() req: AuthenticatedRequest) {
     return this.accountsService.create(createAccountDto, req.user.id);
   }
 
   @Get()
-  findAll(@Req() req: any) {
+  findAll(@Req() req: AuthenticatedRequest) {
     return this.accountsService.findAll(req.user.id);
   }
 
   @Get(':id')
   @UsePipes(ParseUuidIdPipe)
-  findOne(@Param('id') id: string, @Req() req: any) {
+  findOne(@Param('id') id: string, @Req() req: AuthenticatedRequest) {
     return this.accountsService.findOne(id, req.user.id);
   }
 
   @Patch(':id')
   @UsePipes(ParseUuidIdPipe)
-  update(@Param('id') id: string, @Body() updateAccountDto: UpdateAccountDto, @Req() req: any) {
+  update(@Param('id') id: string, @Body() updateAccountDto: UpdateAccountDto, @Req() req: AuthenticatedRequest) {
     console.log('🔍 [DEBUG] AccountsController.update - ID recebido:', id);
     console.log('🔍 [DEBUG] AccountsController.update - User:', req.user);
     console.log('🔍 [DEBUG] AccountsController.update - Dados:', updateAccountDto);
@@ -38,7 +39,7 @@ export class AccountsController {
 
   @Delete(':id')
   @UsePipes(ParseUuidIdPipe)
-  remove(@Param('id') id: string, @Req() req: any) {
+  remove(@Param('id') id: string, @Req() req: AuthenticatedRequest) {
     return this.accountsService.remove(id, req.user.id);
   }
 }

@@ -5,10 +5,9 @@ import { toast } from "@/features/shared/components/ui/toaster";
 export const useCategories = () => {
     const queryClient = useQueryClient();
 
-    const { data: categories = [], isLoading, error } = useQuery({
+    const query = useQuery({
         queryKey: ["categories"],
         queryFn: api.getCategories,
-        select: (data) => data?.categories || []
     });
 
     const createCategory = useMutation({
@@ -38,5 +37,13 @@ export const useCategories = () => {
         }
     });
 
-    return { categories, isLoading, error, createCategory, updateCategory, deleteCategory };
+    return { 
+        data: query.data,
+        categories: query.data?.categories || [],
+        isLoading: query.isLoading, 
+        error: query.error, 
+        createCategory, 
+        updateCategory, 
+        deleteCategory 
+    };
 };

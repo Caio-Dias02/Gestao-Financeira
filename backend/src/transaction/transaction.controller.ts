@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req, UseP
 import { TransactionService } from './transaction.service';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
+import { TransactionFiltersDto } from './dto/transaction-filters.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { ParseUuidIdPipe } from '../commom/pipes/parse-uuid-id.pipe';
 
@@ -16,7 +17,12 @@ export class TransactionController {
   }
 
   @Get()
-  findAll(@Req() req: any) {
+  findAll(@Query() filters: TransactionFiltersDto, @Req() req: any) {
+    return this.transactionService.findAllWithFilters(req.user.id, filters);
+  }
+
+  @Get('simple')
+  findAllSimple(@Req() req: any) {
     return this.transactionService.findAll(req.user.id);
   }
 

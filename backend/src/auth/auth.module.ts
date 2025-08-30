@@ -5,6 +5,7 @@ import { AuthController } from './auth.controller';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './jwt.strategy';
 import { UserModule } from 'src/user/user.module';
+import { CustomLoggerService } from '../commom/logger/custom-logger.service';
 
 @Module({
 	imports: [PassportModule, JwtModule.register({
@@ -14,6 +15,6 @@ import { UserModule } from 'src/user/user.module';
     UserModule
 ],
 	controllers: [AuthController],
-	providers: [AuthService, JwtStrategy],
+	providers: [AuthService, JwtStrategy, CustomLoggerService],
 })
 export class AuthModule {}

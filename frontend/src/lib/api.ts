@@ -1,7 +1,8 @@
 import axios from "axios";
 
 export const api = axios.create({
-    baseURL: "http://localhost:3000",
+    baseURL: "http://localhost:3000/api",
+    withCredentials: true, // Enable cookies for authentication
 });
 
 // Interceptor para adicionar token automaticamente em cada requisição

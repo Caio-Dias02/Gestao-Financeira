@@ -8,6 +8,7 @@ import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { Request, Response } from 'express';
 import { CustomLoggerService } from '../logger/custom-logger.service';
+import { AuthenticatedRequest } from '../../auth/types/auth.types';
 
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {
@@ -21,9 +22,9 @@ export class LoggingInterceptor implements NestInterceptor {
     const userAgent = request.headers['user-agent'];
     const startTime = Date.now();
 
-    // Extrair userId do JWT se existir
-    const user = request.user as any;
-    const userId = user?.sub || user?.id;
+    // Extrair userId do JWT se existir (safely cast to AuthenticatedRequest)
+    const authenticatedRequest = request as AuthenticatedRequest;
+    const userId = authenticatedRequest.user?.id;
 
     return next.handle().pipe(
       tap(() => {
