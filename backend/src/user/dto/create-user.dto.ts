@@ -4,9 +4,9 @@ import {
   IsNotEmpty, 
   IsStrongPassword, 
   Length,
-  Matches,
-  Transform
+  Matches
 } from 'class-validator';
+import { Transform } from 'class-transformer';
 
 export class CreateUserDto {
   @IsNotEmpty({ message: 'Nome é obrigatório' })

@@ -6,6 +6,9 @@ import * as cookieParser from 'cookie-parser';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  // Prefixo global para todas as rotas da API
+  app.setGlobalPrefix('api');
+
   app.enableCors({
     origin: ['http://localhost:5173', 'http://localhost:3000'],
     credentials: true,
@@ -20,5 +23,6 @@ async function bootstrap() {
   }));
 
   await app.listen(process.env.PORT ?? 3000);
+  console.log(`🚀 Servidor rodando em: http://localhost:${process.env.PORT ?? 3000}/api`);
 }
 bootstrap();
