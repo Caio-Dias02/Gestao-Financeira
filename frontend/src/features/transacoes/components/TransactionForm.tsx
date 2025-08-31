@@ -69,17 +69,10 @@ export default function TransactionForm({ isOpen, onClose, transaction }: Transa
 
   const watchedType = watch('type');
   
-  // Debug logs para verificar os dados
-  console.log('🔍 [DEBUG] TransactionForm - categories:', categories);
-  console.log('🔍 [DEBUG] TransactionForm - accounts:', accounts);
-  console.log('🔍 [DEBUG] TransactionForm - watchedType:', watchedType);
-  
   // Filtrar categorias por tipo - garantir que seja sempre um array
   const filteredCategories = Array.isArray(categories) 
     ? categories.filter((category: any) => category.type === watchedType)
     : [];
-    
-  console.log('🔍 [DEBUG] TransactionForm - filteredCategories:', filteredCategories);
 
   const handleFormSubmit = async (data: FormData) => {
     try {

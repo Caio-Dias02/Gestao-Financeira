@@ -70,7 +70,6 @@ export const AccountForm = ({ account, onSubmit, isLoading = false }: AccountFor
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         const formData = { name, type, balance: Number(balance), color, icon };
-        console.log('🔍 [DEBUG] AccountForm.handleSubmit - Dados do formulário:', formData);
         onSubmit(formData);
         
         // Reset form se não estiver editando

@@ -14,7 +14,6 @@ export interface Account {
 // Função para buscar contas
 const fetchAccounts = async (): Promise<Account[]> => {
   const res = await api.get("/dashboard/accounts");
-  console.log("Resposta da API de contas:", res.data);
   
   // Garantir que sempre seja um array
   const accountsData = res.data?.accounts || res.data?.summary?.accounts || [];
@@ -47,9 +46,7 @@ export const useAccounts = () => {
   // ✅ Mutation para criar conta
   const createMutation = useMutation({
     mutationFn: async (account: Partial<Account>) => {
-      console.log('🔍 [DEBUG] useAccounts.createAccount - Dados enviados:', account);
       const res = await api.post("/accounts", account);
-      console.log('🔍 [DEBUG] useAccounts.createAccount - Resposta:', res.data);
       return res.data;
     },
     onSuccess: () => {

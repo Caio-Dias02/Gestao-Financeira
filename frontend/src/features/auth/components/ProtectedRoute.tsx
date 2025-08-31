@@ -25,7 +25,6 @@ export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
                 await api.get("/auth/validate"); // Endpoint para validar token
                 setIsValid(true);
             } catch (error: any) {
-                console.log("Erro na validação do token:", error);
                 localStorage.removeItem("token");
                 setIsValid(false);
             } finally {
