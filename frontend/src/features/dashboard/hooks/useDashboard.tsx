@@ -43,8 +43,8 @@ export const useDashboard = () => {
     const summary = summaryData?.quickStats || null;
     const transactions = recentTransactions || [];
     const chartData = monthlyTrends?.map((d: any) => ({ 
-        name: d.month, 
-        value: d.balance || 0 
+        nome: d.month, 
+        valor: d.balance || 0 
     })) || [];
 
     return { 

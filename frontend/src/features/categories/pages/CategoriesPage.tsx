@@ -80,22 +80,37 @@ export const CategoriesPage = () => {
             >
                 <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
                     <DialogTrigger asChild>
-                        <Button onClick={handleNewCategory}>
+                        <Button 
+                            onClick={handleNewCategory}
+                            className="bg-gradient-primary hover:opacity-90 shadow-green text-white font-medium"
+                            size="lg"
+                        >
                             <Plus className="mr-2 h-4 w-4" />
                             Nova Categoria
                         </Button>
                     </DialogTrigger>
-                    <DialogContent className="sm:max-w-md">
-                        <DialogHeader>
-                            <DialogTitle>
+                    <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
+                        <DialogHeader className="pb-4">
+                            <DialogTitle className="flex items-center gap-2 text-xl">
+                                <div className="w-8 h-8 rounded-lg bg-gradient-primary flex items-center justify-center">
+                                    <Tag className="w-4 h-4 text-white" />
+                                </div>
                                 {editing ? "Editar Categoria" : "Nova Categoria"}
                             </DialogTitle>
+                            <p className="text-muted-foreground">
+                                {editing 
+                                    ? "Atualize as informações da sua categoria." 
+                                    : "Crie uma nova categoria para organizar suas finanças."
+                                }
+                            </p>
                         </DialogHeader>
-                        <CategoryForm
-                            category={categories.find((c: any) => c.id === editing)}
-                            isLoading={createCategory.isPending || updateCategory.isPending}
-                            onSubmit={handleSubmit}
-                        />
+                        <div className="pt-2">
+                            <CategoryForm
+                                category={categories.find((c: any) => c.id === editing)}
+                                isLoading={createCategory.isPending || updateCategory.isPending}
+                                onSubmit={handleSubmit}
+                            />
+                        </div>
                     </DialogContent>
                 </Dialog>
             </PageHeader>

@@ -2,3 +2,192 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  :root {
+    /* Financial Theme - Money Inspired Colors */
+    
+    /* Border radius */
+    --radius: 0.5rem;
+    
+    /* Primary: Rich Green (Dollar Green) */
+    --primary: 142 71% 35%;        /* #2B8A3E */
+    --primary-foreground: 0 0% 98%;
+    
+    /* Secondary: Gold/Yellow (Coin Gold) */
+    --secondary: 45 93% 47%;       /* #F59E0B */
+    --secondary-foreground: 0 0% 9%;
+    
+    /* Accent: Emerald (Premium Green) */
+    --accent: 158 58% 45%;         /* #34D399 */
+    --accent-foreground: 0 0% 9%;
+    
+    /* Background & Surfaces */
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    
+    /* Card & Surfaces with slight warmth */
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    
+    /* Popover */
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    
+    /* Muted with financial warmth */
+    --muted: 210 40% 98%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    
+    /* Border with subtle gold tint */
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 142 71% 35%;
+    
+    /* Financial Status Colors */
+    --success: 142 76% 36%;        /* Rich Green for profits */
+    --success-foreground: 0 0% 98%;
+    
+    --warning: 38 92% 50%;         /* Amber for warnings */
+    --warning-foreground: 0 0% 9%;
+    
+    --destructive: 0 72% 51%;      /* Red for losses */
+    --destructive-foreground: 0 0% 98%;
+    
+    /* Chart Colors - Financial Theme */
+    --chart-1: 142 71% 35%;        /* Primary Green */
+    --chart-2: 45 93% 47%;         /* Gold */
+    --chart-3: 158 58% 45%;        /* Emerald */
+    --chart-4: 217 91% 60%;        /* Blue for neutral */
+    --chart-5: 271 81% 56%;        /* Purple for premium */
+    
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, #2B8A3E 0%, #51CF66 100%);
+    --gradient-gold: linear-gradient(135deg, #F59E0B 0%, #FCD34D 100%);
+    --gradient-success: linear-gradient(135deg, #10B981 0%, #34D399 100%);
+    
+    /* Shadows with color tints */
+    --shadow-green: 0 4px 6px -1px rgba(43, 138, 62, 0.1), 0 2px 4px -1px rgba(43, 138, 62, 0.06);
+    --shadow-gold: 0 4px 6px -1px rgba(245, 158, 11, 0.1), 0 2px 4px -1px rgba(245, 158, 11, 0.06);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  }
+
+  .dark {
+    /* Dark theme with financial colors */
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    
+    --primary: 142 71% 45%;        /* Brighter green for dark mode */
+    --primary-foreground: 222.2 84% 4.9%;
+    
+    --secondary: 45 93% 57%;       /* Brighter gold */
+    --secondary-foreground: 222.2 84% 4.9%;
+    
+    --accent: 158 58% 55%;         /* Brighter emerald */
+    --accent-foreground: 222.2 84% 4.9%;
+    
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 142 71% 45%;
+  }
+}
+
+@layer base {
+  * {
+    border-color: hsl(var(--border));
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+/* Custom utility classes for financial theme */
+@layer utilities {
+  /* Gradients */
+  .bg-gradient-primary {
+    background: var(--gradient-primary);
+  }
+  
+  .bg-gradient-gold {
+    background: var(--gradient-gold);
+  }
+  
+  .bg-gradient-success {
+    background: var(--gradient-success);
+  }
+  
+  /* Money-themed backgrounds */
+  .bg-money-pattern {
+    background-image: 
+      radial-gradient(circle at 25% 25%, rgba(43, 138, 62, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 75% 75%, rgba(245, 158, 11, 0.1) 0%, transparent 50%);
+  }
+  
+  /* Custom shadows */
+  .shadow-green {
+    box-shadow: var(--shadow-green);
+  }
+  
+  .shadow-gold {
+    box-shadow: var(--shadow-gold);
+  }
+  
+  .shadow-financial {
+    box-shadow: var(--shadow-xl);
+  }
+  
+  /* Financial status colors */
+  .text-profit {
+    @apply text-green-600;
+  }
+  
+  .text-loss {
+    @apply text-red-500;
+  }
+  
+  .text-neutral {
+    @apply text-slate-600;
+  }
+  
+  .bg-profit {
+    @apply bg-green-50 text-green-700 border-green-200;
+  }
+  
+  .bg-loss {
+    @apply bg-red-50 text-red-700 border-red-200;
+  }
+  
+  /* Animated backgrounds */
+  .animate-shimmer {
+    background: linear-gradient(90deg, 
+      rgba(255,255,255,0) 0%, 
+      rgba(255,255,255,0.2) 50%, 
+      rgba(255,255,255,0) 100%);
+    background-size: 200% 100%;
+  }
+  
+  /* Glass effect for premium cards */
+  .glass {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  /* Money card effect */
+  .money-card {
+    background: linear-gradient(135deg, 
+      rgba(43, 138, 62, 0.1) 0%,
+      rgba(245, 158, 11, 0.05) 50%,
+      rgba(52, 211, 153, 0.1) 100%);
+    border: 1px solid rgba(43, 138, 62, 0.2);
+  }
+}
+

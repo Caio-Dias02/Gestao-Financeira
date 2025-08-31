@@ -32,8 +32,8 @@ type FormData = {
 };
 
 export default function TransactionForm({ isOpen, onClose, transaction }: TransactionFormProps) {
-  const { categories } = useCategories();
-  const { accounts } = useAccounts();
+  const { categories, isLoading: categoriesLoading } = useCategories();
+  const { accounts, loading: accountsLoading } = useAccounts();
   
   const createTransaction = useCreateTransaction();
   const updateTransaction = useUpdateTransaction();
@@ -69,10 +69,17 @@ export default function TransactionForm({ isOpen, onClose, transaction }: Transa
 
   const watchedType = watch('type');
   
-  // Filtrar categorias por tipo
-  const filteredCategories = categories?.filter(
-    (category: any) => category.type === watchedType
-  ) || [];
+  // Debug logs para verificar os dados
+  console.log('🔍 [DEBUG] TransactionForm - categories:', categories);
+  console.log('🔍 [DEBUG] TransactionForm - accounts:', accounts);
+  console.log('🔍 [DEBUG] TransactionForm - watchedType:', watchedType);
+  
+  // Filtrar categorias por tipo - garantir que seja sempre um array
+  const filteredCategories = Array.isArray(categories) 
+    ? categories.filter((category: any) => category.type === watchedType)
+    : [];
+    
+  console.log('🔍 [DEBUG] TransactionForm - filteredCategories:', filteredCategories);
 
   const handleFormSubmit = async (data: FormData) => {
     try {
@@ -146,7 +153,8 @@ export default function TransactionForm({ isOpen, onClose, transaction }: Transa
                 placeholder="0,00"
                 {...register('amount', { 
                   required: 'Valor é obrigatório',
-                  min: { value: 0.01, message: 'Valor deve ser maior que zero' }
+                  min: { value: 0.01, message: 'Valor deve ser maior que zero' },
+                  valueAsNumber: true
                 })}
               />
               {errors.amount && (
@@ -221,11 +229,11 @@ export default function TransactionForm({ isOpen, onClose, transaction }: Transa
                   <SelectValue placeholder="Selecionar conta" />
                 </SelectTrigger>
                 <SelectContent>
-                  {accounts?.map((account: any) => (
+                  {Array.isArray(accounts) ? accounts.map((account: any) => (
                     <SelectItem key={account.id} value={account.id}>
                       {account.name}
                     </SelectItem>
-                  ))}
+                  )) : []}
                 </SelectContent>
               </Select>
             </div>

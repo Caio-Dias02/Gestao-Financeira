@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Financial Theme</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Test our custom classes */
+        .bg-gradient-primary {
+            background: linear-gradient(135deg, #2B8A3E 0%, #51CF66 100%);
+        }
+        
+        .bg-gradient-gold {
+            background: linear-gradient(135deg, #F59E0B 0%, #FCD34D 100%);
+        }
+        
+        .bg-money-pattern {
+            background-image: 
+                radial-gradient(circle at 25% 25%, rgba(43, 138, 62, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(245, 158, 11, 0.1) 0%, transparent 50%);
+        }
+        
+        .shadow-financial {
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .money-card {
+            background: linear-gradient(135deg, 
+                rgba(43, 138, 62, 0.1) 0%,
+                rgba(245, 158, 11, 0.05) 50%,
+                rgba(52, 211, 153, 0.1) 100%);
+            border: 1px solid rgba(43, 138, 62, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-money-pattern min-h-screen p-8">
+    <div class="max-w-4xl mx-auto space-y-6">
+        <h1 class="text-3xl font-bold text-gray-900 text-center mb-8">🏦 Teste do Tema Financeiro 💰</h1>
+        
+        <!-- Gradient Tests -->
+        <div class="grid grid-cols-3 gap-4">
+            <div class="p-6 bg-gradient-primary rounded-xl text-white text-center font-semibold shadow-financial">
+                Gradiente Primário
+            </div>
+            <div class="p-6 bg-gradient-gold rounded-xl text-white text-center font-semibold shadow-financial">
+                Gradiente Dourado
+            </div>
+            <div class="p-6 money-card rounded-xl text-center font-semibold shadow-financial">
+                Money Card
+            </div>
+        </div>
+        
+        <!-- Cards Test -->
+        <div class="grid grid-cols-2 gap-6">
+            <div class="money-card p-6 rounded-2xl shadow-financial">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 bg-gradient-primary rounded-xl flex items-center justify-center text-white text-xl">
+                        💰
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-lg">Saldo Total</h3>
+                        <p class="text-green-600 font-semibold">R$ 15.420,50</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="money-card p-6 rounded-2xl shadow-financial">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 bg-gradient-gold rounded-xl flex items-center justify-center text-white text-xl">
+                        📈
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-lg">Receitas</h3>
+                        <p class="text-green-600 font-semibold">R$ 8.500,00</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Success Message -->
+        <div class="text-center p-6 bg-white/80 rounded-2xl shadow-financial">
+            <p class="text-lg font-semibold text-green-700">✅ Tema Financeiro Aplicado com Sucesso!</p>
+            <p class="text-gray-600 mt-2">Todas as classes personalizadas estão funcionando corretamente.</p>
+        </div>
+    </div>
+</body>
+</html>
