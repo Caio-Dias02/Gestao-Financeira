@@ -35,9 +35,11 @@ This is a **monorepo** financial management application with two main components
 ### Database Schema
 - **Users**: Basic auth + profile info
 - **Categories**: Income/Expense with colors and icons (user-scoped)
-- **Accounts**: Multiple account types (checking, savings, credit, etc.)
-- **Transactions**: Financial records linked to categories and accounts
-- **Groups**: Multi-user collaboration (partially implemented)
+- **Accounts**: Multiple account types (checking, savings, credit, cash, investment) with balance tracking
+- **Transactions**: Financial records linked to categories and accounts with decimal amounts
+- **Groups**: Multi-user collaboration with role-based access (ADMIN, MEMBER)
+- **Reports**: Configurable reports with JSON filters and cached data
+- **Settings**: User-specific configuration key-value pairs
 
 ## Development Commands
 
@@ -63,9 +65,13 @@ pnpm prisma generate             # Regenerate Prisma client after schema changes
 
 # Testing and quality
 pnpm run test                    # Unit tests
+pnpm run test:watch             # Unit tests in watch mode
 pnpm run test:e2e               # End-to-end tests
-pnpm run test:cov               # Test coverage
+pnpm run test:cov               # Test coverage report
+pnpm run test:debug             # Debug tests with Node inspector
 pnpm run lint                   # ESLint with auto-fix
+pnpm run format                 # Prettier code formatting
+pnpm run build                  # Compile TypeScript to dist/
 ```
 
 ### Frontend Development
@@ -74,8 +80,9 @@ cd frontend
 
 pnpm install                     # Install dependencies
 pnpm run dev                     # Start dev server (usually port 5173)
-pnpm run build                   # Production build
+pnpm run build                   # TypeScript build + Vite production build
 pnpm run lint                    # ESLint check
+pnpm run preview                 # Preview production build locally
 ```
 
 ### Environment Setup
@@ -92,14 +99,18 @@ JWT_EXPIRES_IN=1d
 - **DTOs**: Strong validation with class-validator decorators and Portuguese error messages
 - **Error Handling**: Use NestJS HTTP exceptions (BadRequestException, NotFoundException, ConflictException) instead of generic Error
 - **Services**: Handle business logic, return structured responses with `message` field
-- **Controllers**: Thin layer, delegate to services
+- **Controllers**: Thin layer, delegate to services, use `@Body()`, `@Param()`, `@Query()` decorators
 - **Prisma Errors**: Catch P2002 (unique constraint), P2025 (record not found) specifically
+- **Decimal Handling**: All monetary values use Prisma Decimal type with precision 10,2
 
 ### Frontend Patterns
 - **Features**: Each major feature has `components/`, `hooks/`, `pages/`, `services/` subdirectories
-- **API Calls**: Use TanStack Query hooks for server state management
-- **Components**: Radix UI base components in `shared/components/ui/`
-- **Routing**: React Router with nested routes and protected route wrappers
+- **API Calls**: Use TanStack Query hooks for server state management with Axios
+- **Components**: Radix UI base components in `shared/components/ui/`, styled with Tailwind CSS
+- **Routing**: React Router v7 with nested routes and `ProtectedRoute` wrapper components
+- **Forms**: React Hook Form for form management and validation
+- **State**: TanStack Query for server state, React built-in hooks for local state
+- **Icons**: Lucide React for consistent iconography
 
 ### Security Considerations
 - Passwords hashed with bcrypt (10 rounds)
@@ -121,13 +132,15 @@ JWT_EXPIRES_IN=1d
 ## API Endpoints Structure
 - `/auth/login` - Authentication (sets cookie + returns token)
 - `/auth/logout` - Clear authentication
-- `/user/*` - User management
-- `/category/*` - Category CRUD (user-scoped)
-- `/accounts/*` - Account management
-- `/transaction/*` - Transaction CRUD
-- `/dashboard/*` - Aggregated financial data
+- `/user/*` - User management and profile operations
+- `/category/*` - Category CRUD (user-scoped with colors and icons)
+- `/accounts/*` - Account management with balance tracking
+- `/transaction/*` - Transaction CRUD with category and account linking
+- `/dashboard/*` - Aggregated financial data and analytics
+- `/reports/*` - Report generation and management
+- `/settings/*` - User preference and configuration management
 
 ## Feature Status
-- ✅ **Complete**: Authentication, Users, Categories, Basic Accounts
-- 🚧 **In Progress**: Transactions, Dashboard metrics
-- ❌ **Planned**: Groups collaboration, Advanced reporting, Goals/budgets
+- ✅ **Complete**: Authentication, Users, Categories, Accounts, Basic Transaction CRUD
+- 🚧 **In Progress**: Dashboard analytics, Reports generation, Settings management
+- ❌ **Planned**: Groups collaboration, Advanced filtering, Budget/Goals tracking, Redis caching
