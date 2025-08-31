@@ -11,8 +11,6 @@ interface GraficoCardProps {
 }
 
 export function GraficoCard({ data }: GraficoCardProps) {
-    console.log('🔍 [DEBUG] GraficoCard data received:', data);
-    
     // Validate and sanitize data with better error handling
     const validData = Array.isArray(data) ? data
         .filter(item => {
@@ -21,17 +19,12 @@ export function GraficoCard({ data }: GraficoCardProps) {
                 (item.nome || item.name) && 
                 !isNaN(Number(item.valor || item.value || 0));
             
-            if (!isValid) {
-                console.warn('🚫 Invalid chart data item:', item);
-            }
             return isValid;
         })
         .map(item => ({
             nome: String(item.nome || item.name || 'Período'),
             valor: Number(item.valor || item.value || 0)
         })) : [];
-
-    console.log('✅ [DEBUG] Valid chart data:', validData);
     
     const hasData = validData.length > 0;
     

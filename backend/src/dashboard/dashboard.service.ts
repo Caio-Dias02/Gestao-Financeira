@@ -91,6 +91,7 @@ export class DashboardService {
       whereClause.categoryId = filters.categoryId;  // Filtrar por categoria específica
     }
 
+
     // Executar 3 consultas em paralelo para melhor performance
     // 1. Soma e contagem de receitas
     // 2. Soma e contagem de despesas  

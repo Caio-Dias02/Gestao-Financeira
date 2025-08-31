@@ -47,6 +47,7 @@ export const useDashboard = () => {
         valor: d.balance || 0 
     })) || [];
 
+
     return { 
         summary, 
         transactions, 

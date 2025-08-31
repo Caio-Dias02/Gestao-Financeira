@@ -55,6 +55,8 @@ export const useAccounts = () => {
     onSuccess: () => {
       // ✅ Invalida e refaz a query de contas
       queryClient.invalidateQueries({ queryKey: ['accounts'] });
+      // ✅ Invalida dashboard para atualização em tempo real
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] });
       toast({
         title: "Conta criada com sucesso!",
         description: "A conta foi criada e salva no sistema.",
@@ -80,6 +82,8 @@ export const useAccounts = () => {
     onSuccess: () => {
       // ✅ Invalida e refaz a query de contas
       queryClient.invalidateQueries({ queryKey: ['accounts'] });
+      // ✅ Invalida dashboard para atualização em tempo real
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] });
       toast({
         title: "Conta atualizada com sucesso!",
         description: "As alterações foram salvas no sistema.",
@@ -109,6 +113,8 @@ export const useAccounts = () => {
     onSuccess: () => {
       // ✅ Invalida e refaz a query de contas
       queryClient.invalidateQueries({ queryKey: ['accounts'] });
+      // ✅ Invalida dashboard para atualização em tempo real
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] });
       toast({
         title: "Conta deletada com sucesso!",
         description: "A conta foi removida do sistema.",

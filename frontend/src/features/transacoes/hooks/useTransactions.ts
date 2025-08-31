@@ -41,6 +41,9 @@ export function useCreateTransaction() {
       // Invalidar todas as queries de transações
       queryClient.invalidateQueries({ queryKey: transactionKeys.all });
       
+      // Invalidar dados do dashboard para atualização em tempo real
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+      
       toast.success('Transação criada com sucesso!');
     },
     onError: (error: any) => {
@@ -62,6 +65,9 @@ export function useUpdateTransaction() {
       queryClient.invalidateQueries({ queryKey: transactionKeys.all });
       queryClient.invalidateQueries({ queryKey: transactionKeys.detail(variables.id) });
       
+      // Invalidar dados do dashboard para atualização em tempo real
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+      
       toast.success('Transação atualizada com sucesso!');
     },
     onError: (error: any) => {
@@ -80,6 +86,9 @@ export function useDeleteTransaction() {
     onSuccess: () => {
       // Invalidar todas as queries de transações
       queryClient.invalidateQueries({ queryKey: transactionKeys.all });
+      
+      // Invalidar dados do dashboard para atualização em tempo real
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] });
       
       toast.success('Transação excluída com sucesso!');
     },

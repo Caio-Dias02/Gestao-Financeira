@@ -62,6 +62,10 @@ export class DashboardController {
         totalTransactions: overview.summary.totalTransactions,
         netWorth: accounts.summary.totalBalance,
         monthlyChange: accounts.summary.totalMonthChange,
+        // Incluir dados de receitas e despesas mensais do overview
+        monthlyIncome: overview.summary.totalIncome,
+        monthlyExpenses: overview.summary.totalExpense,
+        monthlyBalance: overview.summary.balance,
       },
     };
   }

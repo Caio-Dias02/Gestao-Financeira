@@ -26,9 +26,6 @@ import {
 
 export const DashboardPage = () => {
     const { summary, transactions, chartData, loading, error } = useDashboard();
-    
-    // Debug logging to identify the issue
-    console.log('🔍 [DEBUG] Dashboard data:', { summary, transactions, chartData });
 
     if (loading) {
         return (
@@ -113,7 +110,7 @@ export const DashboardPage = () => {
                 />
                 <SummaryCard 
                     title="Economia do Mês" 
-                    amount={summary ? (summary.monthlyIncome || 0) - (summary.monthlyExpenses || 0) : 0} 
+                    amount={summary?.monthlyBalance || 0} 
                     variant="default"
                     icon={<PiggyBank className="h-5 w-5" />}
                     trend={summary?.monthlySavingsChange ? {
