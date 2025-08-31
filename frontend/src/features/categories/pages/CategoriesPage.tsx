@@ -2,7 +2,13 @@ import { useState } from "react";
 import { useCategories } from "../hooks/useCategories";
 import { CategoryCard } from "../components/CategoryCard";
 import { CategoryForm } from "../components/CategoryForm";
-import { Skeleton } from "@/features/shared/components/ui/skeleton";
+import { PageHeader } from "@/features/shared/components/ui/page-header";
+import { LoadingState } from "@/features/shared/components/ui/loading-state";
+import { EmptyState } from "@/features/shared/components/ui/empty-state";
+import { Alert, AlertDescription } from "@/features/shared/components/ui/alert";
+import { Button } from "@/features/shared/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/features/shared/components/ui/dialog";
+import { Plus, Tag } from "lucide-react";
 
 export const CategoriesPage = () => {
     const {
@@ -15,40 +21,102 @@ export const CategoriesPage = () => {
     } = useCategories();
 
     const [editing, setEditing] = useState<string | null>(null);
+    const [dialogOpen, setDialogOpen] = useState(false);
 
-    if (isLoading) return <Skeleton className="h-10 w-full" />;
+    const handleSubmit = (data: any) => {
+        if (editing) {
+            updateCategory.mutate({ id: editing, data }, {
+                onSuccess: () => {
+                    setEditing(null);
+                    setDialogOpen(false);
+                }
+            });
+        } else {
+            createCategory.mutate(data, {
+                onSuccess: () => {
+                    setDialogOpen(false);
+                }
+            });
+        }
+    };
 
-    if (error) return <div className="text-red-500 text-center">Erro ao carregar categorias: {error.message}</div>;
+    const handleEdit = (categoryId: string) => {
+        setEditing(categoryId);
+        setDialogOpen(true);
+    };
+
+    const handleNewCategory = () => {
+        setEditing(null);
+        setDialogOpen(true);
+    };
+
+    if (isLoading) {
+        return (
+            <div className="space-y-6">
+                <PageHeader title="Categorias" description="Gerencie suas categorias de receitas e despesas" />
+                <LoadingState type="grid" count={6} />
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="space-y-6">
+                <PageHeader title="Categorias" description="Gerencie suas categorias de receitas e despesas" />
+                <Alert variant="destructive">
+                    <AlertDescription>
+                        Erro ao carregar categorias: {error.message}
+                    </AlertDescription>
+                </Alert>
+            </div>
+        );
+    }
 
     return (
-        <div className="p-4 flex flex-col gap-4">
-            <h1 className="text-2xl font-bold text-center">Gerenciamento de Categorias</h1>
-
-            <div className="max-w-md mx-auto">
-                <CategoryForm
-                    category={categories.find((c: any) => c.id === editing) || undefined}
-                    isLoading={createCategory.isPending || updateCategory.isPending}
-                    onSubmit={data => {
-                        if (editing) {
-                            updateCategory.mutate({ id: editing, data });
-                        } else {
-                            createCategory.mutate(data);
-                        }
-                    }}
-                />
-            </div>
+        <div className="space-y-6">
+            <PageHeader 
+                title="Categorias" 
+                description="Organize suas receitas e despesas em categorias personalizadas"
+            >
+                <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                    <DialogTrigger asChild>
+                        <Button onClick={handleNewCategory}>
+                            <Plus className="mr-2 h-4 w-4" />
+                            Nova Categoria
+                        </Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-md">
+                        <DialogHeader>
+                            <DialogTitle>
+                                {editing ? "Editar Categoria" : "Nova Categoria"}
+                            </DialogTitle>
+                        </DialogHeader>
+                        <CategoryForm
+                            category={categories.find((c: any) => c.id === editing)}
+                            isLoading={createCategory.isPending || updateCategory.isPending}
+                            onSubmit={handleSubmit}
+                        />
+                    </DialogContent>
+                </Dialog>
+            </PageHeader>
 
             {categories.length === 0 ? (
-                <div className="text-center text-gray-500 mt-8">
-                    Nenhuma categoria encontrada. Crie sua primeira categoria acima.
-                </div>
+                <EmptyState
+                    icon={<Tag className="h-12 w-12" />}
+                    title="Nenhuma categoria encontrada"
+                    description="Comece criando sua primeira categoria para organizar suas finanças."
+                    action={{
+                        label: "Criar Categoria",
+                        onClick: handleNewCategory
+                    }}
+                />
             ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {categories.map((category: any) => (
                         <CategoryCard
                             key={category.id}
                             category={category}
-                            onEdit={() => setEditing(category.id)}
+                            onEdit={() => handleEdit(category.id)}
                             onDelete={() => {
                                 deleteCategory.mutate(category.id);
                             }}
